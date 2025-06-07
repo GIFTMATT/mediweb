@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="true">
+    <title>SecureMedPassport - Your Digital Health Records</title>
+    
+    <!-- Preload CSS for better performance -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"></noscript>
+    
+    <style>
+        /* Base styles with improved mobile compatibility */
+        :root {
+            --bg-color: #acd8ec;
+            --text-color: #020116;
+            --accent-color: #8b4f24;
+            --card-bg: rgba(158, 164, 223, 0.9);
+            --pulse-color-1: rgb(1, 0, 43);
+            --pulse-color-2: rgba(243, 247, 8, 0.952);
+            --pulse-color-3: rgba(238, 114, 13, 0.836);
+        }
+        
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-text-size-adjust: 100%;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            color: var(--text-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            margin: 0;
+            background: #cf4a76; /* fallback */
+            background: -webkit-linear-gradient(-45deg, #cf4a76, #e96946, #42348f, #25d81f);
+            background: linear-gradient(-45deg, #cf4a76, #e96946, #42348f, #25d81f);
+            background-size: 400% 400%;
+            -webkit-animation: gradient-pulse 12s ease infinite;
+            animation: gradient-pulse 12s ease infinite;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            touch-action: manipulation;
+        }
+
+        /* Keyframes with vendor prefixes */
+        @-webkit-keyframes gradient-pulse {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes gradient-pulse {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Simplified floating shapes for mobile */
+        body::before {
+            content: "";
+            position: fixed;
+            top: -50vh; 
+            left: -50vw;
+            width: 200vw; 
+            height: 200vh;
+            background: 
+                radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px),
+                radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 50px 50px, 80px 80px;
+            -webkit-animation: float-shapes 60s linear infinite;
+            animation: float-shapes 60s linear infinite;
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        @-webkit-keyframes float-shapes {
+            100% { -webkit-transform: translate(50vw, 50vh); transform: translate(50vw, 50vh); }
+        }
+        
+        @keyframes float-shapes {
+            100% { transform: translate(50vw, 50vh); }
+        }
+
+        /* Content styling */
+        .content {
+            position: relative;
+            padding: 2rem;
+            color: white;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        /* Optimized floating words for mobile */
+        .floating-words-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+        }
+
+        .floating-word {
+            position: absolute;
+            font-size: 1.2rem;
+            font-weight: bold;
+            opacity: 0.6;
+            -webkit-animation-timing-function: linear;
+            animation-timing-function: linear;
+            -webkit-animation-iteration-count: infinite;
+            animation-iteration-count: infinite;
+            font-family: 'Arial', sans-serif;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+            will-change: transform;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+
+        /* Color classes */
+        .floating-word:nth-child(1) { color: rgba(201, 60, 60, 0.945); }
+        .floating-word:nth-child(2) { color: rgb(7, 56, 7); }
+        .floating-word:nth-child(3) { color: rgba(218, 218, 22, 0.925); }
+        .floating-word:nth-child(4) { color: rgb(158, 0, 0); }
+        .floating-word:nth-child(5) { color: rgba(0, 170, 0, 0.973); }
+        .floating-word:nth-child(6) { color: rgba(255, 94, 0, 0.945); }
+
+        /* Animation paths with reduced movement for mobile */
+        @-webkit-keyframes float1 {
+            0% { -webkit-transform: translate(0, 0) rotate(0deg); transform: translate(0, 0) rotate(0deg); }
+            100% { -webkit-transform: translate(20vw, -10vh) rotate(180deg); transform: translate(20vw, -10vh) rotate(180deg); }
+        }
+        
+        @keyframes float1 {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(20vw, -10vh) rotate(180deg); }
+        }
+        
+        @-webkit-keyframes float2 {
+            0% { -webkit-transform: translate(0, 0) rotate(0deg); transform: translate(0, 0) rotate(0deg); }
+            100% { -webkit-transform: translate(-25vw, 10vh) rotate(-180deg); transform: translate(-25vw, 10vh) rotate(-180deg); }
+        }
+        
+        @keyframes float2 {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(-25vw, 10vh) rotate(-180deg); }
+        }
+        
+        /* Reduced number of animations for better mobile performance */
+        .floating-word:nth-child(1) {
+            top: 15%;
+            left: 5%;
+            -webkit-animation: float1 30s linear infinite alternate;
+            animation: float1 30s linear infinite alternate;
+        }
+        
+        .floating-word:nth-child(2) {
+            top: 65%;
+            left: 75%;
+            -webkit-animation: float2 35s linear infinite alternate;
+            animation: float2 35s linear infinite alternate;
+        }
+        
+        .floating-word:nth-child(3) {
+            top: 35%;
+            left: 25%;
+            -webkit-animation: float1 40s linear infinite alternate-reverse;
+            animation: float1 40s linear infinite alternate-reverse;
+        }
+        
+        .floating-word:nth-child(4) {
+            top: 80%;
+            left: 15%;
+            -webkit-animation: float2 32s linear infinite alternate-reverse;
+            animation: float2 32s linear infinite alternate-reverse;
+        }
+        
+        .floating-word:nth-child(5) {
+            top: 25%;
+            left: 85%;
+            -webkit-animation: float1 38s linear infinite alternate;
+            animation: float1 38s linear infinite alternate;
+        }
+        
+        .floating-word:nth-child(6) {
+            top: 50%;
+            left: 50%;
+            -webkit-animation: float2 45s linear infinite alternate-reverse;
+            animation: float2 45s linear infinite alternate-reverse;
+        }
+
+        /* Simplified pulse animation */
+        .background-pulse {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(30px);
+            opacity: 0.8;
+            z-index: -1;
+            -webkit-animation: pulse 15s infinite alternate;
+            animation: pulse 15s infinite alternate;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+
+        .background-pulse:nth-child(1) {           
+            width: 20vh;
+            height: 20vh;
+            border-radius: 50%;
+            position: fixed;
+            top: 40vh;
+            left: 10vw;
+            background: var(--pulse-color-1, #01042e);
+            opacity: 0.8;
+            filter: blur(10px);
+            z-index: -1;
+            -webkit-animation: pulse 4s infinite ease-in-out;
+            animation: pulse 4s infinite ease-in-out;
+        }
+
+        @-webkit-keyframes pulse {
+            0%, 100% { -webkit-transform: scale(1); transform: scale(1); }
+            50% { -webkit-transform: scale(1.1); transform: scale(1.1); opacity: 0.6; }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); opacity: 0.6; }
+        }
+
+        .background-pulse:nth-child(2) {
+            background: var(--pulse-color-2);
+            width: 40vh;
+            height: 40vh;
+            bottom: -10vh;
+            right: -10vh;
+            -webkit-animation-delay: 3s;
+            animation-delay: 3s;
+        }
+
+        /* Simplified medical icons */
+        .medical-icon {
+            position: fixed;
+            opacity: 0.1;
+            z-index: -1;
+            -webkit-animation: float 20s infinite linear;
+            animation: float 20s infinite linear;
+            font-size: 1.5rem;
+            will-change: transform;
+            pointer-events: none;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+
+        @-webkit-keyframes float {
+            0% { -webkit-transform: translateY(0) rotate(0deg); transform: translateY(0) rotate(0deg); }
+            100% { -webkit-transform: translateY(-50vh) rotate(180deg); transform: translateY(-50vh) rotate(180deg); }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-50vh) rotate(180deg); }
+        }
+
+        /* Main UI components */
+        .navbar {
+            background-color: rgb(0, 0, 19);
+            text-shadow: #ddd;
+        }
+        
+        .navbar-brand, .nav-link {
+            color: var(--bg-color) !important;
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            border: 1px solid var(--accent-color);
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+        }
+        
+        .card-header {
+            background-color: var(--text-color);
+            color: var(--bg-color);
+            border-radius: 10px 10px 0 0 !important;
+            font-weight: bold;
+        }
+        
+        .btn-primary {
+            background-color: var(--text-color);
+            border-color: var(--text-color);
+            color: var(--bg-color);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+        
+        .form-control, .form-select {
+            border: 1px solid var(--text-color);
+            font-size: 16px; /* Prevent iOS zoom on focus */
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.25rem rgba(139, 69, 19, 0.25);
+        }
+        
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border: 3px solid var(--text-color);
+            border-radius: 50%;
+        }
+        
+        .login-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: var(--card-bg);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+        
+        .tab-content {
+            padding: 15px;
+            background-color: var(--card-bg);
+            border-radius: 0 0 10px 10px;
+            border: 1px solid var(--accent-color);
+            border-top: none;
+        }
+        
+        .nav-tabs .nav-link {
+            color: var(--text-color);
+        }
+        
+        .nav-tabs .nav-link.active {
+            background-color: var(--card-bg);
+            border-color: var(--accent-color) var(--accent-color) transparent;
+            color: var(--text-color);
+            font-weight: bold;
+        }
+        
+        .file-upload-container {
+            border: 2px dashed var(--text-color);
+            padding: 15px;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .record-item {
+            border-left: 4px solid var(--text-color);
+            padding-left: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .logout-btn {
+            background-color: rgb(180, 182, 214);
+        }
+
+        .document-viewer {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ddd;
+            margin-top: 15px;
+        }
+
+        .file-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .file-preview {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+        
+        /* Mobile-specific optimizations */
+        input, select, textarea {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border-radius: 0;
+        }
+        
+        /* Date input fix for mobile */
+        input[type="date"] {
+            min-height: 44px; /* Larger touch target */
+        }
+        
+        /* Button tap feedback */
+        button, a {
+            -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+            transition: opacity 0.2s;
+        }
+        
+        button:active, a:active {
+            opacity: 0.8;
+        }
+
+        /* ========================================= */
+        /* MOBILE-SPECIFIC STYLES (NEW ADDITIONS) */
+        /* ========================================= */
+
+        /* Mobile Layout for screens up to 768px (typical tablets) */
+        @media (max-width: 768px) {
+            /* Simplified layout for better mobile experience */
+            body {
+                background-attachment: fixed;
+                animation: none; /* Reduce animation for better performance */
+            }
+            
+            .content {
+                padding: 1rem;
+                text-align: center;
+            }
+            
+            /* Stack all sections vertically */
+            .row {
+                flex-direction: column;
+            }
+            
+            .col-md-4, .col-md-8 {
+                width: 100%;
+                max-width: 100%;
+                padding: 0;
+            }
+            
+            /* Adjust card spacing */
+            .card {
+                margin-bottom: 15px;
+                border-radius: 8px;
+            }
+            
+            /* Profile image adjustments */
+            .profile-img {
+                width: 120px;
+                height: 120px;
+                margin: 0 auto 15px;
+            }
+            
+            /* Form adjustments */
+            .form-control, .form-select, .btn {
+                padding: 12px;
+                font-size: 16px;
+            }
+            
+            /* Table adjustments */
+            table {
+                font-size: 14px;
+                display: block;
+                overflow-x: auto;
+            }
+            
+            /* Tab navigation */
+            .nav-tabs {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                white-space: nowrap;
+                padding-bottom: 5px;
+            }
+            
+            .nav-tabs .nav-link {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            
+            /* Document viewer */
+            .document-viewer {
+                height: 250px;
+            }
+            
+            /* File previews */
+            .file-preview {
+                width: 70px;
+                height: 70px;
+            }
+            
+            /* Reduce floating elements for performance */
+            .floating-word {
+                font-size: 0.9rem;
+                opacity: 0.3;
+            }
+            
+            /* Login container adjustments */
+            .login-container {
+                margin: 20px auto;
+                padding: 20px;
+                width: 90%;
+            }
+            
+            /* Modal adjustments */
+            .modal-dialog {
+                margin: 10px;
+            }
+            
+            /* Hide some decorative elements on mobile */
+            .medical-icon {
+                display: none;
+            }
+            
+            /* Simplify form layouts */
+            .row.mb-3 {
+                flex-direction: column;
+            }
+            
+            .row.mb-3 > div {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            /* Emergency contacts table adjustments */
+            #emergencyContactsTable th:nth-child(4),
+            #emergencyContactsTable td:nth-child(4) {
+                min-width: 100px;
+            }
+        }
+
+        /* Mobile Layout for screens up to 576px (small phones) */
+        @media (max-width: 576px) {
+            /* Further simplifications for small screens */
+            .content {
+                padding: 0.5rem;
+            }
+            
+            /* Even more compact forms */
+            .form-control, .form-select, .btn {
+                padding: 10px;
+                font-size: 15px;
+            }
+            
+            /* Smaller profile image */
+            .profile-img {
+                width: 100px;
+                height: 100px;
+            }
+            
+            /* More compact cards */
+            .card {
+                margin-bottom: 10px;
+            }
+            
+            /* Smaller document viewer */
+            .document-viewer {
+                height: 200px;
+            }
+            
+            /* Smaller file previews */
+            .file-preview {
+                width: 60px;
+                height: 60px;
+            }
+            
+            /* Further reduce floating elements */
+            .floating-word {
+                font-size: 0.8rem;
+                opacity: 0.2;
+            }
+            
+            /* More compact login container */
+            .login-container {
+                margin: 15px auto;
+                padding: 15px;
+                width: 95%;
+            }
+            
+            /* Adjust table font sizes */
+            table {
+                font-size: 13px;
+            }
+            
+            /* Adjust tab navigation */
+            .nav-tabs .nav-link {
+                padding: 8px 12px;
+                font-size: 13px;
+            }
+            
+            /* Adjust modal padding */
+            .modal-body {
+                padding: 15px;
+            }
+            
+            /* Stack all form elements */
+            .row > div {
+                width: 100% !important;
+                margin-bottom: 8px;
+            }
+            
+            /* Adjust button sizes */
+            .btn {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+            
+            /* Adjust file upload container */
+            .file-upload-container {
+                padding: 10px;
+            }
+            
+            /* Adjust card headers */
+            .card-header {
+                padding: 10px 15px;
+                font-size: 15px;
+            }
+            
+            /* Adjust card body padding */
+            .card-body {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- [Rest of your HTML content remains exactly the same] -->
+    <div class="content">
+        <h1>Iris</h1>
+        <p>explore greatness!</p>
+    </div>
+    
+    <!-- Floating words container -->
+    <div class="floating-words-container">
+        <div class="floating-word">IRIS</div>
+        <div class="floating-word">SAFE AND SECURE</div>
+        <div class="floating-word">TRACK YOUR HEALTH</div>
+        <div class="floating-word">IRIS</div>
+        <div class="floating-word">SAFE AND SECURE</div>
+        <div class="floating-word">TRACK YOUR HEALTH</div>        
+    </div>
+
+    <!-- Background elements -->
+    <div class="background-pulse"></div>
+    <div class="background-pulse"></div>
+    
+    <!-- Floating medical icons -->
+    <div class="medical-icon" style="left: 10%; top: 20%;">❤️</div>
+    <div class="medical-icon" style="left: 20%; top: 70%;">💊</div>
+    <div class="medical-icon" style="left: 70%; top: 50%;">🩺</div>
+    <div class="medical-icon" style="left: 80%; top: 30%;">🏥</div>
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <h2 class="text-center mb-4">Medical Passport Login</h2>
+        <form id="loginForm">
+            <div class="mb-3">
+                <label for="loginUsername" class="form-label">Username</label>
+                <input type="text" class="form-control" id="loginUsername" required>
+            </div>
+            <div class="mb-3">
+                <label for="loginPassword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="loginPassword" required>
+            </div>
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+            <div class="text-center mt-3">
+                <a href="#" id="registerLink">Don't have an account? Register</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Registration Screen (initially hidden) -->
+    <div id="registerScreen" class="login-container" style="display: none;">
+        <h2 class="text-center mb-4">Register New Account</h2>
+        <form id="registerForm">
+            <div class="mb-3">
+                <label for="regUsername" class="form-label">Username</label>
+                <input type="text" class="form-control" id="regUsername" required>
+            </div>
+            <div class="mb-3">
+                <label for="regPassword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="regPassword" required>
+            </div>
+            <div class="mb-3">
+                <label for="regConfirmPassword" class="form-label">Confirm Password</label>
+                <input type="password" class="form-control" id="regConfirmPassword" required>
+            </div>
+            <div class="mb-3">
+                <label for="regEmail" class="form-label">Email</label>
+                <input type="email" class="form-control" id="regEmail" required>
+            </div>
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary" id="registerBtn">Register</button>
+            </div>
+            <div class="text-center mt-3">
+                <a href="#" id="loginLink">Already have an account? Login</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Main Application (initially hidden) -->
+    <div id="appContainer" style="display: none;">
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+            <div class="container">
+                <a class="navbar-brand" href="#">SecureMedPassport</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#profileTab" data-bs-toggle="tab">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#doctorsTab" data-bs-toggle="tab">Doctors</a>
+                        </li>
+                    </ul>
+                    <button class="btn logout-btn" id="logoutBtn">Logout</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="container">
+            <div class="tab-content">
+                <!-- Profile Tab -->
+                <div class="tab-pane fade show active" id="profileTab">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">Profile Image</div>
+                                <div class="card-body text-center">
+                                    <img src="https://via.placeholder.com/150" alt="Profile Image" class="profile-img mb-3" id="profileImage">
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-primary" id="uploadImageBtn">Upload New Image</button>
+                                        <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">Personal Information</div>
+                                <div class="card-body">
+                                    <form id="personalInfoForm">
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="firstName" class="form-label">First Name</label>
+                                                <input type="text" class="form-control" id="firstName" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="lastName" class="form-label">Last Name</label>
+                                                <input type="text" class="form-control" id="lastName" required>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="dob" class="form-label">Date of Birth</label>
+                                                <input type="date" class="form-control" id="dob" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="bloodType" class="form-label">Blood Type</label>
+                                                <select class="form-select" id="bloodType" required>
+                                                    <option value="">Select</option>
+                                                    <option value="A+">A+</option>
+                                                    <option value="A-">A-</option>
+                                                    <option value="B+">B+</option>
+                                                    <option value="B-">B-</option>
+                                                    <option value="AB+">AB+</option>
+                                                    <option value="AB-">AB-</option>
+                                                    <option value="O+">O+</option>
+                                                    <option value="O-">O-</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="phone" class="form-label">Phone Number</label>
+                                            <input type="tel" class="form-control" id="phone" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="email" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="address" class="form-label">Address</label>
+                                            <textarea class="form-control" id="address" rows="2"></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                            <div class="card mt-4">
+                                <div class="card-header">Emergency Contacts</div>
+                                <div class="card-body">
+                                    <table class="table" id="emergencyContactsTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Relationship</th>
+                                                <th>Phone</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Contacts will be added here dynamically -->
+                                        </tbody>
+                                    </table>
+                                    <button class="btn btn-primary mt-2" id="addContactBtn">Add Emergency Contact</button>
+                                </div>
+                            </div>
+
+                            <!-- Health Status Section -->
+                            <div class="card mt-4">
+                                <div class="card-header">Current Health Status</div>
+                                <div class="card-body">
+                                    <form id="healthStatusForm">
+                                        <div class="mb-3">
+                                            <label for="currentConditions" class="form-label">Current Medical Conditions</label>
+                                            <textarea class="form-control" id="currentConditions" rows="3" placeholder="List any current medical conditions"></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="currentMedications" class="form-label">Current Medications</label>
+                                            <textarea class="form-control" id="currentMedications" rows="3" placeholder="List all current medications, dosages, and frequencies"></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="allergies" class="form-label">Allergies</label>
+                                            <textarea class="form-control" id="allergies" rows="2" placeholder="List any allergies to medications, foods, or other substances"></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Update Health Status</button>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                            <div class="card mt-4">
+                                <div class="card-header">Upload Health Status Documents</div>
+                                <div class="card-body">
+                                    <div class="file-upload-container">
+                                        <h5>Upload New Health Status Document</h5>
+                                        <p>Drag and drop files here or click to browse</p>
+                                        <input type="file" id="healthStatusUpload" class="form-control" multiple>
+                                        <div class="mt-3">
+                                            <label for="healthDocType" class="form-label">Document Type</label>
+                                            <select class="form-select" id="healthDocType">
+                                                <option value="condition">Medical Condition</option>
+                                                <option value="medication">Medication List</option>
+                                                <option value="allergy">Allergy Report</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                        <div class="mt-3">
+                                            <label for="healthDocDate" class="form-label">Document Date</label>
+                                            <input type="date" class="form-control" id="healthDocDate">
+                                        </div>
+                                        <button class="btn btn-primary mt-3" id="uploadHealthDocBtn">Upload Documents</button>
+                                    </div>
+                                    
+                                    <h5 class="mt-4">Your Health Status Documents</h5>
+                                    <div class="file-preview-container" id="healthStatusFilesPreview"></div>
+                                    <table class="table" id="healthStatusTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Type</th>
+                                                <th>Description</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Health status documents will be added here dynamically -->
+                                        </tbody>
+                                    </table>
+                                    <div id="healthDocViewerContainer" style="display: none;">
+                                        <h5>Document Viewer</h5>
+                                        <iframe id="healthDocViewer" class="document-viewer"></iframe>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Medical History Section -->
+                            <div class="card mt-4">
+                                <div class="card-header">Medical History</div>
+                                <div class="card-body">
+                                    <form id="medicalHistoryForm">
+                                        <div class="mb-3">
+                                            <label for="pastSurgeries" class="form-label">Past Surgeries</label>
+                                            <textarea class="form-control" id="pastSurgeries" rows="3" placeholder="List any past surgeries with dates"></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="hospitalizations" class="form-label">Hospitalizations</label>
+                                            <textarea class="form-control" id="hospitalizations" rows="3" placeholder="List any hospitalizations with dates and reasons"></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="familyHistory" class="form-label">Family Medical History</label>
+                                            <textarea class="form-control" id="familyHistory" rows="3" placeholder="List any significant family medical history"></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Update Medical History</button>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                            <div class="card mt-4">
+                                <div class="card-header">Upload Medical History Documents</div>
+                                <div class="card-body">
+                                    <div class="file-upload-container">
+                                        <h5>Upload New Medical History Document</h5>
+                                        <p>Drag and drop files here or click to browse</p>
+                                        <input type="file" id="medicalHistoryUpload" class="form-control" multiple>
+                                        <div class="mt-3">
+                                            <label for="historyDocType" class="form-label">Document Type</label>
+                                            <select class="form-select" id="historyDocType">
+                                                <option value="surgery">Surgery Report</option>
+                                                <option value="hospitalization">Hospitalization Record</option>
+                                                <option value="family">Family History</option>
+                                                <option value="vaccination">Vaccination Record</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                        <div class="mt-3">
+                                            <label for="historyDocDate" class="form-label">Document Date</label>
+                                            <input type="date" class="form-control" id="historyDocDate">
+                                        </div>
+                                        <button class="btn btn-primary mt-3" id="uploadHistoryDocBtn">Upload Documents</button>
+                                    </div>
+                                    
+                                    <h5 class="mt-4">Your Medical History Documents</h5>
+                                    <div class="file-preview-container" id="medicalHistoryFilesPreview"></div>
+                                    <table class="table" id="medicalHistoryTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Type</th>
+                                                <th>Description</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Medical history documents will be added here dynamically -->
+                                        </tbody>
+                                    </table>
+                                    <div id="historyDocViewerContainer" style="display: none;">
+                                        <h5>Document Viewer</h5>
+                                        <iframe id="historyDocViewer" class="document-viewer"></iframe>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Medical Reports Section -->
+                            <div class="card mt-4">
+                                <div class="card-header">Upload Medical Reports</div>
+                                <div class="card-body">
+                                    <div class="file-upload-container">
+                                        <h5>Upload New Medical Report</h5>
+                                        <p>Drag and drop files here or click to browse</p>
+                                        <input type="file" id="medicalReportUpload" class="form-control" multiple>
+                                        <div class="mt-3">
+                                            <label for="reportType" class="form-label">Report Type</label>
+                                            <select class="form-select" id="reportType">
+                                                <option value="lab">Lab Results</option>
+                                                <option value="imaging">Imaging (X-ray, MRI, etc.)</option>
+                                                <option value="doctor">Doctor's Report</option>
+                                                <option value="prescription">Prescription</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                        <div class="mt-3">
+                                            <label for="reportDate" class="form-label">Report Date</label>
+                                            <input type="date" class="form-control" id="reportDate">
+                                        </div>
+                                        <button class="btn btn-primary mt-3" id="uploadReportBtn">Upload Reports</button>
+                                    </div>
+                                    
+                                    <h5 class="mt-4">Your Medical Reports</h5>
+                                    <div class="file-preview-container" id="reportsFilesPreview"></div>
+                                    <table class="table" id="reportsTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Type</th>
+                                                <th>Description</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Reports will be added here dynamically -->
+                                        </tbody>
+                                    </table>
+                                    <div id="reportViewerContainer" style="display: none;">
+                                        <h5>Document Viewer</h5>
+                                        <iframe id="reportViewer" class="document-viewer"></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Doctors Tab -->
+                <div class="tab-pane fade" id="doctorsTab">
+                    <div class="card">
+                        <div class="card-header">Healthcare Providers</div>
+                        <div class="card-body">
+                            <table class="table" id="doctorsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Specialty</th>
+                                        <th>Phone</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Doctors will be added here dynamically -->
+                                </tbody>
+                            </table>
+                            <button class="btn btn-primary mt-2" id="addDoctorBtn">Add Healthcare Provider</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Emergency Contact Modal -->
+    <div class="modal fade" id="addContactModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Emergency Contact</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="contactForm">
+                        <div class="mb-3">
+                            <label for="contactName" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="contactName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contactRelationship" class="form-label">Relationship</label>
+                            <input type="text" class="form-control" id="contactRelationship" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contactPhone" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="contactPhone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contactNotes" class="form-label">Notes</label>
+                            <textarea class="form-control" id="contactNotes" rows="2"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Contact</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Doctor Modal -->
+    <div class="modal fade" id="addDoctorModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Healthcare Provider</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="doctorForm">
+                        <div class="mb-3">
+                            <label for="doctorName" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="doctorName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="doctorSpecialty" class="form-label">Specialty</label>
+                            <input type="text" class="form-control" id="doctorSpecialty" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="doctorPhone" class="form-label">Phone</label>
+                            <input type="tel" class="form-control" id="doctorPhone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="doctorEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="doctorEmail">
+                        </div>
+                        <div class="mb-3">
+                            <label for="doctorAddress" class="form-label">Address</label>
+                            <textarea class="form-control" id="doctorAddress" rows="2"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Provider</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Document Viewer Modal -->
+    <div class="modal fade" id="documentViewerModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="documentViewerTitle">Document Viewer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <iframe id="modalDocumentViewer" class="document-viewer" style="width: 100%; height: 70vh;"></iframe>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="downloadDocumentBtn">Download</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
